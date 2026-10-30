@@ -1,0 +1,38 @@
+### Java & Maven ###
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven Wrapper
+!.mvn/wrapper/maven-wrapper.jar
+
+# Maven Release Plugin & Shade Plugin (Generated files)
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Logs & Crash Dumps
+*.log
+hs_err_pid*
+replay_pid*
+
+### IntelliJ IDEA ###
+# Ignore the entire IDE configuration folder
+.idea/
+*.iws
+*.iml
+*.ipr 
+out/
+
+# Temporary backup files
+**/*~

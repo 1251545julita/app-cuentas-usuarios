@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="proyecto-clase05" />
+        <module name="app-cuentas-usuarios" />
         <module name="api-cuentas-usuarios" />
       </profile>
     </annotationProcessing>
@@ -14,6 +15,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-cuentas-usuarios" options="-parameters" />
+      <module name="app-cuentas-usuarios" options="-parameters" />
       <module name="proyecto-clase05" options="-parameters" />
     </option>
   </component>
