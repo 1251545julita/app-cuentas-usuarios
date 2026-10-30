@@ -1,0 +1,499 @@
+{
+  "info": {
+    "_postman_id": "fbd20ede-3099-46c0-869f-45fd77e5e217",
+    "name": "API de Cuentas y Usuarios - Protocolo HTTP",
+    "description": "Diplomatura en Desarrollo de Software FinTech: IA y Microservicios - UTN / Codeki.  \nBateria de pedidos sobre la API básica de Cuentas y Usuarios de un sistema bancario.  \nCada pedido indica en su descripcion el codigo de estado que se espera.  \nRequiere la aplicacion corriendo en [http://localhost:8080](http://localhost:8080)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "4361231"
+  },
+  "item": [
+    {
+      "name": "1. GET /cuentas -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Lista todas las cuentas. Siempre 200, aunque la lista venga vacia."
+      },
+      "response": []
+    },
+    {
+      "name": "2. GET /cuentas?numeroCuenta=123456789012 -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas?numeroCuenta=123456789012",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ],
+          "query": [
+            {
+              "key": "numeroCuenta",
+              "value": "123456789012"
+            }
+          ]
+        },
+        "description": "Filtro por query string (numeroCuenta). Si no hay coincidencias devuelve 200 con lista vacia, NO 404."
+      },
+      "response": []
+    },
+    {
+      "name": "3. GET /cuentas/1 -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "1"
+          ]
+        },
+        "description": "El 1 es una path variable (Id de una cuenta)."
+      },
+      "response": []
+    },
+    {
+      "name": "4. GET /cuentas/999 -> 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "999"
+          ]
+        },
+        "description": "Esa cuenta no existe, devuelve 404."
+      },
+      "response": []
+    },
+    {
+      "name": "5. POST /cuentas CA valida -> 201",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"Caja de Ahorro\",\n  \"moneda\": \"USD\",\n  \"usuarioId\": \"1\",\n  \"saldoInicial\": 0.00,\n  \"porcentajeTasaInteresAnual\": 16.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Crea una cuenta tipo Caja de Ahorro (CA). Esperado: 201 Created. Este pedido NO se puede hacer desde la barra del navegador."
+      },
+      "response": []
+    },
+    {
+      "name": "6. POST /cuentas CAhoro invalida -> 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"tipo\": \"Caja de Ahoro\",\r\n  \"moneda\": \"USD\",\r\n  \"usuarioId\": \"1\",\r\n  \"saldoInicial\": 0.00,\r\n  \"limiteDescubierto\": 1000000.00\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Body con otro tipoCuenta que que no sea Caja de Ahorro o Cuenta Corriente. Esperado: 400 Bad Request. La ruta esta bien; el pedido, no."
+      },
+      "response": []
+    },
+    {
+      "name": "7. POST /cuentas CA invalida -> 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"tipo\": \"Caja de Ahorro\",\r\n  \"moneda\": \"USD\",\r\n  \"usuarioId\": \"1\",\r\n  \"saldoInicial\": 0.00,\r\n  \"limiteDescubierto\": 1000000.00\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Body de Caja de Ahorro (CA) con limiteDescubierto. Esperado: 400 Bad Request. La ruta esta bien; el pedido, no."
+      },
+      "response": []
+    },
+    {
+      "name": "8. POST /cuentas CC valida -> 201",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"Cuenta Corriente\",\n  \"moneda\": \"USD\",\n  \"usuarioId\": \"1\",\n  \"saldoInicial\": 10.00,\n  \"limiteDescubierto\": 10000.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Crea una cuenta tipo Cuenta Corriente (CC). Esperado: 201 Created. Este pedido NO se puede hacer desde la barra del navegador."
+      },
+      "response": []
+    },
+    {
+      "name": "9. POST /cuentas CC inválida -> 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"Cuenta Corriente\",\n  \"moneda\": \"USD\",\n  \"usuarioId\": \"1\",\n  \"saldoInicial\": 0.00,\n  \"porcentajeTasaInteresAnual\": 17.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Body de Cuenta Corriente (CC) con limiteDescubierto. Esperado: 400 Bad Request. La ruta esta bien; el pedido, no."
+      },
+      "response": []
+    },
+    {
+      "name": "10. PUT /cuentas/1 CC -> 200",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"porcentajeTasaAnual\": 10.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "1"
+          ]
+        },
+        "description": "Actualiza la cuenta 1. Con /cuentas/999 devuelve 404."
+      },
+      "response": []
+    },
+    {
+      "name": "11. PUT /cuentas/1 CC -> 400",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"porcentajeTasaInteresAnual\": 10.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "1"
+          ]
+        },
+        "description": "Trata de actualiza la cuenta tipo CC con id 1 con error de campo para CA."
+      },
+      "response": []
+    },
+    {
+      "name": "12. DELETE /cuentas/13 -> 204",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/12?modo=logico",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "12"
+          ],
+          "query": [
+            {
+              "key": "modo",
+              "value": "logico"
+            }
+          ]
+        },
+        "description": "Borra cuenta creada en el pedido 5. Esperado: 204 No Content. Ejecutarlo dos veces: la segunda da 404."
+      },
+      "response": []
+    },
+    {
+      "name": "13. DELETE /cuentas -> 405",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "La ruta /cuentas existe para GET y POST, pero no para DELETE. Esperado: 405 Method Not Allowed gracias a Spring."
+      },
+      "response": []
+    },
+    {
+      "name": "8. POST /cuentas/1/acreditaciones?saldo=15000 -> 200",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/clientes/1/acreditaciones?importe=15000",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "clientes",
+            "1",
+            "acreditaciones"
+          ],
+          "query": [
+            {
+              "key": "importe",
+              "value": "15000"
+            }
+          ]
+        },
+        "description": "Suma saldo. Probar tambien con importe=-5 (400) y sobre /clientes/999 (404): el mismo endpoint falla distinto segun el motivo."
+      },
+      "response": []
+    },
+    {
+      "name": "11. GET /http/sin-memoria -> 200 (stateless)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/http/sin-memoria",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "http",
+            "sin-memoria"
+          ]
+        },
+        "description": "Ejecutarlo varias veces: el contador sube, pero el servidor no sabe si sos siempre vos (slide 6)."
+      },
+      "response": []
+    },
+    {
+      "name": "12. GET /http/eco -> 200 (headers)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Alumno",
+            "value": "escriba-su-nombre-aca"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/http/eco?mensaje=hola",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "http",
+            "eco"
+          ],
+          "query": [
+            {
+              "key": "mensaje",
+              "value": "hola"
+            }
+          ]
+        },
+        "description": "Devuelve los headers que recibio. Cambiar el valor de X-Alumno y ver como vuelve en el cuerpo (slides 15-16)."
+      },
+      "response": []
+    },
+    {
+      "name": "13. GET /http/estados/418 -> 418",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/http/estados/418",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "http",
+            "estados",
+            "418"
+          ]
+        },
+        "description": "Devuelve el codigo que se le pida. Probar con 200, 201, 301, 404, 418 y 500 (slides 19-21).\nMirar tambien el header X-Clase en la respuesta."
+      },
+      "response": []
+    },
+    {
+      "name": "14. GET /http/sin-contenido -> 204",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/http/sin-contenido",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "http",
+            "sin-contenido"
+          ]
+        },
+        "description": "204: salio bien y no hay nada que devolver. El body es opcional; el codigo no (slide 22)."
+      },
+      "response": []
+    },
+    {
+      "name": "15. GET /http/romper -> 500",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/http/romper",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "http",
+            "romper"
+          ]
+        },
+        "description": "Lanza una excepcion a proposito. Nadie escribio un 500: lo devuelve Spring cuando el codigo del servidor explota (slide 20)."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
