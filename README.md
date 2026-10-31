@@ -1,4 +1,4 @@
-# Application — API de Cuentas y Usuario — SpringBoot y Persistencia en MySQL
+# Application — API de Cuentas y Usuarios — SpringBoot y Persistencia en MySQL
 
 ** Diplomatura en Desarrollo de Software FinTech: IA y Microservicios — UTN / Codeki**
 ** Student: Julita, Jesica R. **

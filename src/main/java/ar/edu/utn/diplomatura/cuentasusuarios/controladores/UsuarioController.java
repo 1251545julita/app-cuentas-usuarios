@@ -88,7 +88,10 @@ public class UsuarioController {
         }
     }
 
-    /** PUT /usuarios/1 */
+    /** PUT /usuarios/1
+     *
+     * @RequestBody convierte el JSON del cuerpo en un objeto Usuario con datos actualizados.
+     */
     @Operation(summary = "Actualiza un usuario existente",
             description = "Actualiza nombre, apellido, email y cuentas asociadas. Devuelve null si el id no existe.")
     @ApiResponse(responseCode = "200", description = "Cuenta actualizada.")
@@ -98,7 +101,11 @@ public class UsuarioController {
         return usuarioService.actualizar(id, datosNuevos);
     }
 
-    /** DELETE /usuarios/1 */
+    /** DELETE /usuarios/6
+     *
+     * @PathVariable envia por path param el id del usuario existente.
+     * @RequestParam envia por path param el modo de cómo eliminar ese usuario existente. Puede ser lógico o físico.
+     */
     @Operation(summary = "Borra logica o fisicamente un usuario existente",
             description = "Deshabilita un usuario existente en modo logico. En modo fisico, borra fisicamente de la Base de Datos.")
     @ApiResponse(responseCode = "204", description = "Usuario deshabilitado.")
@@ -118,11 +125,4 @@ public class UsuarioController {
         }
         return ResponseEntity.noContent().build(); // 204
     }
-
-//    /** POST /usuarios/1/acreditaciones?importe=15000 */
-//    @PostMapping("/{id}/acreditaciones")
-//    public Usuario acreditar(@PathVariable Long id, @RequestParam double importe) {
-//        return usuarioService.acreditar(id, importe);
-//    }
-
 }

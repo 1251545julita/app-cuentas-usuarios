@@ -314,18 +314,18 @@
       "response": []
     },
     {
-      "name": "12. DELETE /cuentas/13 -> 204",
+      "name": "12. DELETE /cuentas/7 -> 204",
       "request": {
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{baseUrl}}/cuentas/12?modo=logico",
+          "raw": "{{baseUrl}}/cuentas/7?modo=logico",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "cuentas",
-            "12"
+            "7"
           ],
           "query": [
             {
@@ -383,12 +383,12 @@
       "response": []
     },
     {
-      "name": "15. POST /cuentas/6/retiros?saldo=500 -> 200",
+      "name": "15. POST /cuentas/6/retiros?saldo=1000 -> 200",
       "request": {
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{baseUrl}}/cuentas/6/retiros?saldo=500",
+          "raw": "{{baseUrl}}/cuentas/6/retiros?saldo=1000",
           "host": [
             "{{baseUrl}}"
           ],
@@ -400,11 +400,11 @@
           "query": [
             {
               "key": "saldo",
-              "value": "500"
+              "value": "1000"
             }
           ]
         },
-        "description": "Restar saldo. Probar tambien con saldo= -100 (400) y sobre /usuarios/999 (404): el mismo endpoint falla distinto segun el motivo."
+        "description": "Restar saldo. Probar tambien con saldo= -1000 (400) y sobre /usuarios/999 (404): el mismo endpoint falla distinto segun el motivo."
       },
       "response": []
     },

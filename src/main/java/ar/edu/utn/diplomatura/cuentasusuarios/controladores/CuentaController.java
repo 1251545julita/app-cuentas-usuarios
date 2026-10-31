@@ -109,7 +109,11 @@ public class CuentaController {
         }
     }
 
-    /** PUT /cuentas/1 */
+    /** PUT /cuentas/1
+     *
+     * @PathVariable envia por path param el id de la cuenta existente.
+     * @RequestBody convierte el JSON del cuerpo en un objeto CuentaUpdateRequest para actualizar datos de uan cuenta existente.
+     */
     @Operation(summary = "Actualiza una cuenta existente",
             description = "Actualiza el porcentajeTasaInteresAnual de una Caja de Ahorro o el limiteDescuerto de una Cuenta Corriente.")
     @ApiResponse(responseCode = "200", description = "Cuenta actualizada.")
@@ -126,7 +130,11 @@ public class CuentaController {
         }
     }
 
-    /** DELETE /cuentas/12 */
+    /** DELETE /cuentas/12
+     *
+     * @PathVariable envia por path param el id de la cuenta existente.
+     * @RequestParam envia por path param el modo de cómo eliminar esa cuenta existente. Puede ser lógico o físico.
+     */
     @Operation(summary = "Borra logica o fisicamente una cuenta existente",
             description = "Deshabilita una cuenta existente en modo logico. En modo fisico, borra fisicamente una cuenta existente.")
     @ApiResponse(responseCode = "204", description = "Cuenta deshabilitada.")
@@ -147,11 +155,15 @@ public class CuentaController {
         return ResponseEntity.noContent().build(); // 204
     }
 
+    /** POST /cuentas/6/acreditaciones?saldo=500
+     *
+     * @PathVariable envia por path param el id de la cuenta existente.
+     * @RequestParam envia por path param el saldo a acreditar en la cuenta.
+     */
     @Operation(summary = "Ingresar dinero en una cuenta")
     @ApiResponse(responseCode = "200", description = "Acreditacion realizada; devuelve la cuenta con el saldo actualizado.")
     @ApiResponse(responseCode = "400", description = "Monto inválido.")
     @ApiResponse(responseCode = "404", description = "La cuenta no existe.")
-    /** POST /cuentas/1/acreditaciones?saldo=33000 */
     @PostMapping("/{id}/acreditaciones")
     public ResponseEntity<?> acreditar(@PathVariable Long id, @RequestParam BigDecimal saldo) {
         try {
@@ -163,16 +175,26 @@ public class CuentaController {
         }
     }
 
-//
-//    @PostMapping("/{id}/retiros")
-//    @Operation(summary = "Retirar dinero de una cuenta",
-//            description = "Una cuenta corriente puede quedar en descubierto hasta su límite.")
-//    @ApiResponse(responseCode = "200", description = "Retiro realizado; devuelve la cuenta con el saldo actualizado")
-//    @ApiResponse(responseCode = "404", description = "La cuenta no existe",
-//            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-//    @ApiResponse(responseCode = "422", description = "Saldo insuficiente",
-//            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-//    public CuentaResponse retirar(@PathVariable Long id, @Valid @RequestBody MovimientoRequest request) {
-//        return cuentaService.retirar(id, request.monto());
-//    }
+    /** POST /cuentas/6/retiros?saldo=1000
+     *
+     * @PathVariable envia por path param el id de la cuenta existente.
+     * @RequestParam envia por path param el saldo a retirar de la cuenta.
+     */
+    @Operation(summary = "Retirar dinero de una cuenta",
+            description = "Una cuenta corriente puede quedar en descubierto hasta su límite.")
+    @ApiResponse(responseCode = "200", description = "Retiro realizado; devuelve la cuenta con el saldo actualizado.")
+    @ApiResponse(responseCode = "404", description = "La cuenta no existe.")
+    @ApiResponse(responseCode = "409", description = "Saldo insuficiente.")
+    @PostMapping("/{id}/retiros")
+    public ResponseEntity<?> retirar(@PathVariable Long id, @RequestParam BigDecimal saldo) {
+        try {
+            return ResponseEntity.ok(cuentaService.retirarSaldo(id, saldo));
+        } catch (SaldoInvalidoException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (CuentaNoEncontradaException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        } catch (SaldoInsuficienteException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+        }
+    }
 }

@@ -138,11 +138,17 @@ public class CuentaService {
         Cuenta cuentaExistente = buscarPorId(id)
                 .orElseThrow(() -> new CuentaNoEncontradaException(id));
 
-        if (unSaldo == null || unSaldo.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new SaldoInvalidoException(unSaldo);
-        }
+        cuentaExistente.ingresarSaldo(unSaldo);
+        return cuentaRepository.save(cuentaExistente);
+    }
 
-        cuentaExistente.setSaldo(cuentaExistente.getSaldo().add(unSaldo));
+    /** Resta un monto al saldo de una cuenta existente.
+     * Devuelve null si la cuenta no existe o una excepcion si el saldo es invalido o insuficiente. */
+    public Cuenta retirarSaldo(Long id, BigDecimal unSaldo) {
+        Cuenta cuentaExistente = buscarPorId(id)
+                .orElseThrow(() -> new CuentaNoEncontradaException(id));
+
+        cuentaExistente.retirarSaldo(unSaldo);
         return cuentaRepository.save(cuentaExistente);
     }
 }
