@@ -132,15 +132,17 @@ public class CuentaService {
         return true;
     }
 
-//    /** Suma un importe al saldo.
-//     * Devuelve null si el cliente no existe o si el importe no es positivo. */
-//    public Cuenta acreditarSaldo (Long id, BigDecimal importe) {
-//        Cuenta unaCuenta = buscarPorId(id).orElse(null);
-//        if (unaCuenta == null || importe == null || importe.compareTo(BigDecimal.ZERO) <= 0) {
-//            return null;
-//        }
-//
-//        unaCuenta.setSaldo(unaCuenta.getSaldo().add(importe));
-//        return cuentaRepository.save(unaCuenta);
-//    }
+    /** Suma un monto al saldo de una cuenta existente.
+     * Devuelve null si la cuenta no existe o si el monto no es positivo. */
+    public Cuenta acreditarSaldo (Long id, BigDecimal unSaldo) {
+        Cuenta cuentaExistente = buscarPorId(id)
+                .orElseThrow(() -> new CuentaNoEncontradaException(id));
+
+        if (unSaldo == null || unSaldo.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new SaldoInvalidoException(unSaldo);
+        }
+
+        cuentaExistente.setSaldo(cuentaExistente.getSaldo().add(unSaldo));
+        return cuentaRepository.save(cuentaExistente);
+    }
 }

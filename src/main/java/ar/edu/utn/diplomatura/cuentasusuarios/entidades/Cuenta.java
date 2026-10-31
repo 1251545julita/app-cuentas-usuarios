@@ -1,5 +1,7 @@
 package ar.edu.utn.diplomatura.cuentasusuarios.entidades;
 
+import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.SaldoInsuficienteException;
+import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.SaldoInvalidoException;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -84,24 +86,23 @@ public abstract class Cuenta implements Operable {
     public abstract BigDecimal obtenerSaldoDisponible();
 
     @Override
-    public void ingresarMonto(BigDecimal monto) {
-        validarMonto(monto);
-        saldo = saldo.add(monto);
+    public void ingresarSaldo(BigDecimal unSaldo) {
+        validarSaldo(unSaldo);
+        saldo = saldo.add(unSaldo);
     }
 
     @Override
-    public void retirarMonto(BigDecimal monto) {
-        validarMonto(monto);
-//        if (monto.compareTo(obtenerSaldoDisponible()) > 0) {
-//            //throw new SaldoInsuficienteException(numeroCuenta, obtenerSaldoDisponible(), monto);
-//        }
-        saldo = saldo.subtract(monto);
+    public void retirarSaldo(BigDecimal unSaldo) {
+        validarSaldo(unSaldo);
+        if (unSaldo.compareTo(obtenerSaldoDisponible()) > 0) {
+            throw new SaldoInsuficienteException(numeroCuenta, obtenerSaldoDisponible(), unSaldo);
+        }
+        saldo = saldo.subtract(unSaldo);
     }
 
-    private void validarMonto(BigDecimal monto) {
-//        if (monto == null || monto.compareTo(BigDecimal.ZERO) <= 0) {
-//            //throw new MontoInvalidoException("El monto debe ser mayor a cero");
-//            yield;
-//        }
+    private void validarSaldo(BigDecimal unSaldo) {
+        if (unSaldo == null || unSaldo.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new SaldoInvalidoException(unSaldo);
+        }
     }
 }

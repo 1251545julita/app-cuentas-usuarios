@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 // Producto financiero sobre el que se puede operar.
 public interface Operable {
 
-    void ingresarMonto(BigDecimal monto);
+    void ingresarSaldo(BigDecimal unSaldo);
 
-    void retirarMonto(BigDecimal monto);
+    void retirarSaldo(BigDecimal unSaldo);
 
     BigDecimal obtenerSaldoDisponible();
 }

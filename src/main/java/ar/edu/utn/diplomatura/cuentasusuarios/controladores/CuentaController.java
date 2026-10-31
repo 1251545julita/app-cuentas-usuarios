@@ -1,5 +1,6 @@
 package ar.edu.utn.diplomatura.cuentasusuarios.controladores;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -7,14 +8,14 @@ import java.util.Map;
 import ar.edu.utn.diplomatura.cuentasusuarios.dto.CuentaRequest;
 import ar.edu.utn.diplomatura.cuentasusuarios.dto.CuentaResponse;
 import ar.edu.utn.diplomatura.cuentasusuarios.dto.CuentaUpdateRequest;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.CamposInvalidosException;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.CuentaNoEncontradaException;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.TipoCuentaInvalidosException;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.UsuarioNoEncontradoException;
+import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -146,9 +147,32 @@ public class CuentaController {
         return ResponseEntity.noContent().build(); // 204
     }
 
-//    /** POST /cuentas/1/acreditaciones?saldo=33000 */
-//    @PostMapping("/{id}/acreditaciones")
-//    public Cuenta acreditar(@PathVariable Long id, @RequestParam BigDecimal importe) {
-//        return cuentaService.acreditarSaldo(id, importe);
+    @Operation(summary = "Ingresar dinero en una cuenta")
+    @ApiResponse(responseCode = "200", description = "Acreditacion realizada; devuelve la cuenta con el saldo actualizado.")
+    @ApiResponse(responseCode = "400", description = "Monto inválido.")
+    @ApiResponse(responseCode = "404", description = "La cuenta no existe.")
+    /** POST /cuentas/1/acreditaciones?saldo=33000 */
+    @PostMapping("/{id}/acreditaciones")
+    public ResponseEntity<?> acreditar(@PathVariable Long id, @RequestParam BigDecimal saldo) {
+        try {
+            return ResponseEntity.ok(cuentaService.acreditarSaldo(id, saldo));
+        } catch (SaldoInvalidoException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));            // 400
+        } catch (CuentaNoEncontradaException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage())); // 404
+        }
+    }
+
+//
+//    @PostMapping("/{id}/retiros")
+//    @Operation(summary = "Retirar dinero de una cuenta",
+//            description = "Una cuenta corriente puede quedar en descubierto hasta su límite.")
+//    @ApiResponse(responseCode = "200", description = "Retiro realizado; devuelve la cuenta con el saldo actualizado")
+//    @ApiResponse(responseCode = "404", description = "La cuenta no existe",
+//            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+//    @ApiResponse(responseCode = "422", description = "Saldo insuficiente",
+//            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+//    public CuentaResponse retirar(@PathVariable Long id, @Valid @RequestBody MovimientoRequest request) {
+//        return cuentaService.retirar(id, request.monto());
 //    }
 }
