@@ -1,13 +1,21 @@
 package ar.edu.utn.diplomatura.cuentasusuarios.servicios;
 
 import ar.edu.utn.diplomatura.cuentasusuarios.componentes.ValidadorDeDni;
+import ar.edu.utn.diplomatura.cuentasusuarios.entidades.Cuenta;
 import ar.edu.utn.diplomatura.cuentasusuarios.entidades.Usuario;
+import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.CamposInvalidosException;
+import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.DniInvalidoException;
+import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.EmailDuplicadoException;
 import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.UsuarioNoEncontradoException;
 import ar.edu.utn.diplomatura.cuentasusuarios.repositorios.UsuarioRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static ar.edu.utn.diplomatura.cuentasusuarios.Constants.CAJA_AHORRO_CAMPO_EXCLUSIVO;
+import static ar.edu.utn.diplomatura.cuentasusuarios.Constants.TIPO_CUENTA_CAJA_AHORRO;
 
 /**
  * Reglas del negocio. Está entre el controlador y el repositorio.
@@ -47,11 +55,20 @@ public class UsuarioService {
 
     /** Crea un usuario. El CUIT se guarda siempre sin guiones. */
     public Usuario crear(Usuario unUsuario) {
+        if (!validadorDeDni.esValido(unUsuario.getDni())) {
+            throw new DniInvalidoException(unUsuario.getDni());
+        }
+
+        if (usuarioRepository.existsByEmail(unUsuario.getEmail())) {
+            throw new EmailDuplicadoException(unUsuario.getEmail());
+        }
+
         unUsuario.setDni(validadorDeDni.normalizar(unUsuario.getDni()));
-        unUsuario.setId(null); // El id lo pone la base: si viene uno en el JSON, lo ignoramos.}
+        unUsuario.setId(null); // El id lo pone la base: si viene uno en el JSON, lo ignoramos.
 
         return usuarioRepository.save(unUsuario);
     }
+
 
     /** Actualiza nombre, apellido, email y cuentas asociadas. Devuelve null si el id no existe. */
     public Usuario actualizar(Long id, Usuario datosNuevos) {
@@ -74,6 +91,16 @@ public class UsuarioService {
             return false;
         }
         usuarioRepository.deleteById((id));
+        return true;
+    }
+
+    public boolean desactivar(Long id){
+        Usuario unUsuario = buscarPorId(id).orElse(null);
+        if (unUsuario == null) {
+            return false;
+        }
+        unUsuario.setHabilitado(false);
+        usuarioRepository.save(unUsuario);
         return true;
     }
 

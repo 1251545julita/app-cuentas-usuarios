@@ -25,6 +25,7 @@ public class Usuario {
     private String dni;
     private String email;
     private LocalDateTime fechaAlta;
+    private boolean habilitado;
 
     @JsonIgnore
     @OneToMany(mappedBy = "usuario")
@@ -40,6 +41,7 @@ public class Usuario {
         this.dni = dni;
         this.email = email;
         this.fechaAlta = LocalDateTime.now();;
+        this.habilitado = true;
     }
 
     // Getters y setters: se usan para armar el JSON de las respuestas.
@@ -79,6 +81,9 @@ public class Usuario {
         return fechaAlta;
     }
     public void setFechaAlta(LocalDateTime fechaAlta) {}
+
+    public boolean isHabilitado() { return habilitado; }
+    public void setHabilitado(boolean habilitado) { this.habilitado = habilitado; }
 
     public List<Cuenta> getCuentas() {
         return cuentas;

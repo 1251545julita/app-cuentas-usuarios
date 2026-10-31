@@ -129,7 +129,7 @@ public class CuentaController {
     @Operation(summary = "Borra logica o fisicamente una cuenta existente",
             description = "Deshabilita una cuenta existente en modo logico. En modo fisico, borra fisicamente una cuenta existente.")
     @ApiResponse(responseCode = "204", description = "Cuenta deshabilitada.")
-    @ApiResponse(responseCode = "404", description = "Cuenta indicada no encontrada, ya se borró.")
+    @ApiResponse(responseCode = "404", description = "Cuenta indicada no encontrada o ya se borró.")
     @ApiResponse(responseCode = "400", description = "El modo debe ser 'logico' o 'fisico' en los parametros.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id, @RequestParam(defaultValue = "logico")String modo) {

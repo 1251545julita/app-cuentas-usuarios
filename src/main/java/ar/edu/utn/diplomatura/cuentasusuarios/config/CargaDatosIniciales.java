@@ -45,12 +45,12 @@ public class CargaDatosIniciales implements CommandLineRunner {
         }
 
         // saveAll hace un INSERT por cada elemento de la lista.
-        Usuario usuario01 = new Usuario("Ana", "Queen", "27301234567", "ana.queen@mail.com");
-        Usuario usuario02 = new Usuario("Bruno", "Diaz", "20289876543", "bruno.diaz@mail.com");
-        Usuario usuario03 = new Usuario("Carla", "Conte", "27354112233", "carla.conte@mail.com");
-        Usuario usuario04 = new Usuario("Diego", "Gomez", "20221098765", "diego.gomez@mail.com");
-        Usuario usuario05 = new Usuario("Elena", "Suarez", "23412233445", "elena.suarez@mail.com");
-        Usuario usuario06 = new Usuario("Federico", "Luna", "2033445566", "federico.luna@mail.com");
+        Usuario usuario01 = new Usuario("Ana", "Queen", "30123456", "ana.queen@mail.com");
+        Usuario usuario02 = new Usuario("Bruno", "Diaz", "28987654", "bruno.diaz@mail.com");
+        Usuario usuario03 = new Usuario("Carla", "Conte", "35411223", "carla.conte@mail.com");
+        Usuario usuario04 = new Usuario("Diego", "Gomez", "22109876", "diego.gomez@mail.com");
+        Usuario usuario05 = new Usuario("Elena", "Suarez", "41223344", "elena.suarez@mail.com");
+        Usuario usuario06 = new Usuario("Federico", "Luna", "33445561", "federico.luna@mail.com");
 
         usuarioRepository.saveAll(List.of(usuario01, usuario02, usuario03, usuario04, usuario05, usuario06));
 
