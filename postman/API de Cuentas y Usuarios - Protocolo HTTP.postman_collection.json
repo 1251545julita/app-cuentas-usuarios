@@ -195,7 +195,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"tipo\": \"Cuenta Corriente\",\n  \"moneda\": \"USD\",\n  \"usuarioId\": \"1\",\n  \"saldoInicial\": 10.00,\n  \"limiteDescubierto\": 10000.00\n}",
+          "raw": "{\n  \"tipo\": \"Cuenta Corriente\",\n  \"moneda\": \"USD\",\n  \"usuarioId\": \"1\",\n  \"saldoInicial\": 0.00,\n  \"limiteDescubierto\": 1000000.00\n}",
           "options": {
             "raw": {
               "language": "json"
