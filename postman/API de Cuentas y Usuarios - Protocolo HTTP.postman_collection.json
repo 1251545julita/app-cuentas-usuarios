@@ -357,135 +357,274 @@
       "response": []
     },
     {
-      "name": "8. POST /cuentas/1/acreditaciones?saldo=15000 -> 200",
+      "name": "14. POST /cuentas/6/acreditaciones?saldo=500 -> 200",
       "request": {
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{baseUrl}}/clientes/1/acreditaciones?importe=15000",
+          "raw": "{{baseUrl}}/cuentas/6/acreditaciones?saldo=500",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "clientes",
-            "1",
+            "cuentas",
+            "6",
             "acreditaciones"
           ],
           "query": [
             {
-              "key": "importe",
-              "value": "15000"
+              "key": "saldo",
+              "value": "500"
             }
           ]
         },
-        "description": "Suma saldo. Probar tambien con importe=-5 (400) y sobre /clientes/999 (404): el mismo endpoint falla distinto segun el motivo."
+        "description": "Suma saldo. Probar tambien con saldo= -100 (400) y sobre /usuarios/999 (404): el mismo endpoint falla distinto segun el motivo."
       },
       "response": []
     },
     {
-      "name": "11. GET /http/sin-memoria -> 200 (stateless)",
+      "name": "15. POST /cuentas/6/retiros?saldo=500 -> 200",
       "request": {
-        "method": "GET",
+        "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{baseUrl}}/http/sin-memoria",
+          "raw": "{{baseUrl}}/cuentas/6/retiros?saldo=500",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "http",
-            "sin-memoria"
-          ]
-        },
-        "description": "Ejecutarlo varias veces: el contador sube, pero el servidor no sabe si sos siempre vos (slide 6)."
-      },
-      "response": []
-    },
-    {
-      "name": "12. GET /http/eco -> 200 (headers)",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "X-Alumno",
-            "value": "escriba-su-nombre-aca"
-          }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/http/eco?mensaje=hola",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "http",
-            "eco"
+            "cuentas",
+            "6",
+            "retiros"
           ],
           "query": [
             {
-              "key": "mensaje",
-              "value": "hola"
+              "key": "saldo",
+              "value": "500"
             }
           ]
         },
-        "description": "Devuelve los headers que recibio. Cambiar el valor de X-Alumno y ver como vuelve en el cuerpo (slides 15-16)."
+        "description": "Restar saldo. Probar tambien con saldo= -100 (400) y sobre /usuarios/999 (404): el mismo endpoint falla distinto segun el motivo."
       },
       "response": []
     },
     {
-      "name": "13. GET /http/estados/418 -> 418",
+      "name": "16. GET /usuarios -> 200",
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{baseUrl}}/http/estados/418",
+          "raw": "{{baseUrl}}/usuarios",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "http",
-            "estados",
-            "418"
+            "usuarios"
           ]
         },
-        "description": "Devuelve el codigo que se le pida. Probar con 200, 201, 301, 404, 418 y 500 (slides 19-21).\nMirar tambien el header X-Clase en la respuesta."
+        "description": "Lista todos los usuarios. Siempre 200, aunque la lista venga vacia."
       },
       "response": []
     },
     {
-      "name": "14. GET /http/sin-contenido -> 204",
+      "name": "17. GET /usuarios?apellido=queen -> 200",
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{baseUrl}}/http/sin-contenido",
+          "raw": "{{baseUrl}}/usuarios?apellido=queen",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "http",
-            "sin-contenido"
+            "usuarios"
+          ],
+          "query": [
+            {
+              "key": "apellido",
+              "value": "queen"
+            }
           ]
         },
-        "description": "204: salio bien y no hay nada que devolver. El body es opcional; el codigo no (slide 22)."
+        "description": "Filtro por query string (slide 8). Si no hay coincidencias devuelve 200 con lista vacia, NO 404."
       },
       "response": []
     },
     {
-      "name": "15. GET /http/romper -> 500",
+      "name": "18. GET /usuarios/1 -> 200",
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{baseUrl}}/http/romper",
+          "raw": "{{baseUrl}}/usuarios/1",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "http",
-            "romper"
+            "usuarios",
+            "1"
           ]
         },
-        "description": "Lanza una excepcion a proposito. Nadie escribio un 500: lo devuelve Spring cuando el codigo del servidor explota (slide 20)."
+        "description": "El 1 es una path variable (slide 8)."
+      },
+      "response": []
+    },
+    {
+      "name": "19. GET /usuarios/999 -> 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/usuarios/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios",
+            "999"
+          ]
+        },
+        "description": "Ese usuario no existe. Devuelve 404."
+      },
+      "response": []
+    },
+    {
+      "name": "20. POST /usuarios valido -> 201",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Seok-Jin\",\n  \"apellido\": \"Kim\",\n  \"dni\": \"48725632\",\n  \"email\": \"soyeljindebts@mail.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/usuarios",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios"
+          ]
+        },
+        "description": "Crea un usuario. Esperado: 201 Created. Si se envia dos veces, lanza un error 409 por email ya registrado."
+      },
+      "response": []
+    },
+    {
+      "name": "21. POST /usuarios invalido -> 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nombre\": \"Seok-Jin\",\r\n  \"apellido\": \"Kim\",\r\n  \"dni\": \"487256321\",\r\n  \"email\": \"soyeljindebts@mail.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/usuarios",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios"
+          ]
+        },
+        "description": "Cuerpo con dni invalidoo null. Esperado: 400 Bad Request. La ruta esta bien; el pedido, no."
+      },
+      "response": []
+    },
+    {
+      "name": "22. PUT /usuarios/1 -> 200",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Ana\",\n  \"apellido\": \"Queen\",\n  \"email\": \"ana.queen.nuevo@mail.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/usuarios/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios",
+            "1"
+          ]
+        },
+        "description": "Actualiza el usuario 1. Con /usuarios/999 devuelve 404."
+      },
+      "response": []
+    },
+    {
+      "name": "23. DELETE /usuarios/6 -> 204",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/usuarios/7?modo=logico",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios",
+            "7"
+          ],
+          "query": [
+            {
+              "key": "modo",
+              "value": "logico"
+            }
+          ]
+        },
+        "description": "Borra cuenta creada en el pedido 5. Esperado: 204 No Content. Ejecutarlo dos veces: la segunda da 404."
+      },
+      "response": []
+    },
+    {
+      "name": "24. DELETE /usuarios -> 405",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/usuarios",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios"
+          ]
+        },
+        "description": "La ruta /usuarios existe para GET y POST, pero no para DELETE. Esperado: 405 Method Not Allowed.\nNadie programo este error: lo devuelve Spring solo (slides 13, 20)."
       },
       "response": []
     }
