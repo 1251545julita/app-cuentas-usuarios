@@ -99,10 +99,20 @@ Tenés que ver las 6 cuentas en formato JSON.
 | `POST` | `/cuentas` | Crea una cuenta nueva (Caja de Ahorro o Cuenta Corriente) |
 | `PUT` | `/cuentas/{id}` | Actualiza datos de la cuenta (ej. tasa anual) |
 | `DELETE` | `/cuentas/{id}?modo=logico` | Elimina una cuenta de forma lógica |
+| `POST` | `/cuentas/{id}/acreditaciones?saldo=N` | Suma un importe al saldo de la cuenta |
+| `POST` | `/cuentas/{id}/retiros?saldo=N` | Resta un importe al saldo de la cuenta |
+| `GET` | `/usuarios` | Lista todos los usuarios |
+| `GET` | `/usuarios?apellido=texto` | Filtra usuarios por apellido |
+| `GET` | `/usuarios/{id}` | Trae un usuario específico |
+| `POST` | `/usuarios` | Crea un usuario nuevo |
+| `PUT` | `/usuarios/{id}` | Actualiza el nombre, apellido y email del usuario |
+| `DELETE` | `/usuarios/{id}?modo=logico` | Elimina un usuario de forma lógica |
+| `GET` | `/http/sin-memoria` | Prueba de estado (stateless) |
+| `GET` | `/http/eco?mensaje=N` | Prueba de cabeceras (headers) |
+| `GET` | `/http/estados/{codigo}` | Devuelve el código HTTP solicitado |
 
-
-Cuando algo no se puede hacer (el id no existe, los datos enviados no corresponden al tipo de cuenta), 
-la respuesta llega con un código de error específico como **404 Not Found** o **400 Bad Request**.
+Cuando algo no se puede hacer (el id no existe, el DNI es inválido, los datos enviados no corresponden), 
+la respuesta llega con un código de error específico como **404 Not Found**, **400 Bad Request** o **409 Conflict**.
 
 
 ### Cómo se prueban: con `curl`, desde **Git Bash**
@@ -196,6 +206,59 @@ curl -i -X DELETE http://localhost:8080/cuentas
 
 ```
 
+---
+### Sección Usuarios
+---
+
+**Listar todos los usuarios** (devuelve 200)
+```bash
+
+curl -i http://localhost:8080/usuarios
+
+```
+
+**Traer el usuario con id 1** (devuelve 200)
+```bash
+
+curl -i http://localhost:8080/usuarios/1
+
+```
+
+**Filtrar usuarios por apellido (ej. Queen)** (devuelve 200)
+```bash
+
+curl -i "http://localhost:8080/usuarios?apellido=queen"
+
+```
+
+**Crear un usuario válido** (devuelve 201 Created)
+```bash
+
+curl -i -X POST http://localhost:8080/usuarios -H "Content-Type: application/json" -d '{"nombre": "Seok-Jin","apellido": "Kim","dni": "48725632","email": "soyeljindebts@mail.com"}'
+
+```
+
+**Crear un usuario inválido (DNI incorrecto)** (devuelve 400 Bad Request)
+```bash
+
+curl -i -X POST http://localhost:8080/usuarios -H "Content-Type: application/json" -d '{"nombre": "Seok-Jin","apellido": "Kim","dni": "487256321","email": "soyeljindebts@mail.com"}'
+
+```
+
+**Actualizar nombre, apellido y email del usuario 1** (devuelve 200)
+```bash
+
+curl -i -X PUT http://localhost:8080/usuarios/1 -H "Content-Type: application/json" -d '{"nombre": "Ana","apellido": "Queen","email": "ana.queen.nuevo@mail.com"}'
+
+```
+
+**Eliminar el usuario 7 lógicamente** (devuelve 204 No Content)
+```bash
+
+curl -i -X DELETE "http://localhost:8080/usuarios/7?modo=logico"
+
+```
+
 > **Qué significa el `-i`:** muestra también los encabezados de la respuesta, incluido el
 
 > código de estado (`HTTP/1.1 200`, `201`, `400`, etc.). Sin `-i` verías solo el JSON del cuerpo.
@@ -209,6 +272,7 @@ app-cuentas-usuarios/
 ├── pom.xml
 ├── README.md
 ├── src/main/resources/application.yml    # Configuración de Base de Datos MySql
+├── src/test/*                            # Contiene tests de lógica de negocio de componentes y entidades
 └── src/main/java/ar/edu/utn/diplomatura/cuentasusuarios/
     ├── CuentasUsuariosApplication.java   # Ejecuta la carga y la impresión de los datos de las cuentas y usuarios
     ├── Constants.java           # Definición de constantes que se utilizan en el sistema.
