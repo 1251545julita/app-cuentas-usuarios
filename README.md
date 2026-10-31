@@ -38,29 +38,29 @@ sobre `pom.xml` → **Add as Maven Project**.
 
 ### Desde IntelliJ
 
-Abrí `src/main/java/ar/edu/utn/diplomatura/cuentasusuarios/Main.java` y hacé clic en
-la flecha verde ▶ que está al lado de `public static void main`.
+Abrí `src/main/java/ar/edu/utn/diplomatura/cuentasusuarios/CuentasUsuariosApplication.java` y hacé clic en
+la flecha verde ▶ que está al lado de `public static void cuentasusuariosapplication`.
 Se ejecutan las nueve demos seguidas y la salida aparece en la consola de abajo.
 
 ### Desde la terminal, con Maven
 
 ```bash
 mvn compile
-java -cp target/classes ar.edu.utn.diplomatura.cuentasusuarios.Main
+java -cp target/classes ar.edu.utn.diplomatura.cuentasusuarios.CuentasUsuariosApplication
 ```
 
 ### Desde la terminal, solo con el JDK
 
 ```bash
 javac -encoding UTF-8 -d out $(find src/main/java -name "*.java")
-java -cp out ar.edu.utn.diplomatura.cuentasusuarios.Main
+java -cp out ar.edu.utn.diplomatura.cuentasusuarios.CuentasUsuariosApplication
 ```
 
 En PowerShell (Windows), esas dos líneas son:
 
 ```powershell
 javac -encoding UTF-8 -d out (Get-ChildItem -Recurse -Filter *.java src\main\java | ForEach-Object { $_.FullName })
-java -cp out ar.edu.utn.diplomatura.cuentasusuarios.Main
+java -cp out ar.edu.utn.diplomatura.cuentasusuarios.CuentasUsuariosApplication
 ```
 
 ---
@@ -178,7 +178,7 @@ curl -i -X PUT http://localhost:8080/cuentas/1 -H "Content-Type: application/jso
 **Acreditar 15000 al cliente 1**
 ```bash
 
-curl -i -X POST "http://localhost:8080/clientes/1/acreditaciones?importe=15000"
+curl -i -X POST "http://localhost:8080/cuentas/{id}/acreditaciones?saldo="
 
 ```
 
