@@ -3,13 +3,11 @@ package ar.edu.utn.diplomatura.cuentasusuarios.servicios;
 import ar.edu.utn.diplomatura.cuentasusuarios.componentes.ValidadorDeDni;
 import ar.edu.utn.diplomatura.cuentasusuarios.entidades.Cuenta;
 import ar.edu.utn.diplomatura.cuentasusuarios.entidades.Usuario;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.CamposInvalidosException;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.DniInvalidoException;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.EmailDuplicadoException;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.UsuarioNoEncontradoException;
+import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.*;
 import ar.edu.utn.diplomatura.cuentasusuarios.repositorios.UsuarioRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 import java.util.Optional;
@@ -72,17 +70,32 @@ public class UsuarioService {
 
     /** Actualiza nombre, apellido, email y cuentas asociadas. Devuelve null si el id no existe. */
     public Usuario actualizar(Long id, Usuario datosNuevos) {
-        Usuario usuarioExistente = buscarPorId(id).orElse(null);
-        if (usuarioExistente == null) {
-            return null;
-        }
-
+//        Usuario usuarioExistente = buscarPorId(id).orElse(null);
+//        if (usuarioExistente == null) {
+//            return null;
+//        }
+        Usuario usuarioExistente = obtenerOFallar(id);
         usuarioExistente.setNombre(datosNuevos.getNombre());
         usuarioExistente.setApellido(datosNuevos.getApellido());
         usuarioExistente.setEmail(datosNuevos.getEmail());
         usuarioExistente.setCuentas(datosNuevos.getCuentas());
 
         return usuarioRepository.save(usuarioExistente);
+    }
+
+    public void eliminarUsuario(Long id, String modo) {
+
+        if (!modo.equals("fisico") && !modo.equals("logico")) {
+            throw new ModoEliminacionInvalidoException(modo);
+        }
+
+        boolean seDioDeBaja = modo.equals("logico")
+                ? desactivar(id)
+                : eliminar(id);
+
+        if (!seDioDeBaja) {
+            throw new UsuarioNoEncontradoException(id);
+        }
     }
 
     /** Elimina un usuario. Si el id no existe, no hace nada. */

@@ -94,7 +94,7 @@ public class CuentaController {
     @ApiResponse(responseCode = "404", description = "El usuario indicado no existe.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> crear(@RequestBody CuentaRequest request) {
+    public ResponseEntity<?> crear(@Valid @RequestBody CuentaRequest request) {
         try {
             CuentaResponse creada = cuentaService.crear(request);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -120,9 +120,9 @@ public class CuentaController {
     @ApiResponse(responseCode = "404", description = "Cuenta indicada no encontrada.")
     @ApiResponse(responseCode = "400", description = "Campos que no corresponden al tipo de cuenta indicado.")
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody CuentaUpdateRequest datosNuevos) {
+    public ResponseEntity<?> actualizar(@PathVariable Long id, @Valid @RequestBody CuentaUpdateRequest datosNuevos) {
         try {
-            return ResponseEntity.ok(cuentaService.actualizar(id, datosNuevos));
+                return ResponseEntity.ok(cuentaService.actualizar(id, datosNuevos));
         } catch (CuentaNoEncontradaException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         } catch (CamposInvalidosException e) {

@@ -20,8 +20,7 @@ relacional como MySQL y exponer funcionalidades a través de endpoints REST.
 
 ## 2. Cómo abrirlo en IntelliJ IDEA
 
-1. Descomprimir el `.zip` en una carpeta **sin espacios ni acentos en la ruta**
-   (por ejemplo `C:\dev\app-cuentas-usuarios`).
+1. Luego de clonar el repositorio https://github.com/1251545julita/app-cuentas-usuarios y abrir IntelliJ.
 2. **File > Open** → elegir la carpeta `app-cuentas-usuarios`, la que contiene el `pom.xml`.
    No abrir el `pom.xml` directamente.
 3. Cuando pregunte, aceptar **Trust Project**.
@@ -40,27 +39,75 @@ sobre `pom.xml` → **Add as Maven Project**.
 
 Abrí `src/main/java/ar/edu/utn/diplomatura/cuentasusuarios/CuentasUsuariosApplication.java` y hacé clic en
 la flecha verde ▶ que está al lado de `public static void cuentasusuariosapplication`.
-Se ejecutan las nueve demos seguidas y la salida aparece en la consola de abajo.
+Se ejecuta la aplicación y queda a la escucha de peticiones y la salida aparece en la consola de abajo.
 
-### Desde la terminal, con Maven
+### Desde la terminal, con Maven desde IntelliJ
 
-```bash
-mvn compile
-java -cp target/classes ar.edu.utn.diplomatura.cuentasusuarios.CuentasUsuariosApplication
+Compilar el proyecto:
+```
+mvn clean compile
 ```
 
-### Desde la terminal, solo con el JDK
+Ejecutar los tests:
+```
+mvn test
+```
+
+Ejecutar la aplicación Spring Boot:
+```
+mvn spring-boot:run
+```
+
+Generar el paquete ejecutable:
+```
+mvn clean package
+```
+
+Ejecutar el JAR generado:
+```
+java -jar target/app-cuentas-usuarios-1.0.0.jar
+```
+
+
+### Desde la terminal, utilizando Maven Wrapper
+
+El Maven Wrapper permite ejecutar Maven sin necesidad de tenerlo instalado globalmente. 
+Utiliza la versión de Maven definida por el proyecto. En Linux, macOS o Git Bash:
 
 ```bash
-javac -encoding UTF-8 -d out $(find src/main/java -name "*.java")
-java -cp out ar.edu.utn.diplomatura.cuentasusuarios.CuentasUsuariosApplication
+# Compilar
+./mvnw clean compile
+
+# Ejecutar los tests
+./mvnw test
+
+# Levantar la aplicación
+./mvnw spring-boot:run
+
+# Generar el JAR ejecutable
+./mvnw clean package
+
+# Ejecutar el JAR
+java -jar target/app-cuentas-usuarios-1.0.0.jar
 ```
 
 En PowerShell (Windows), esas dos líneas son:
 
 ```powershell
-javac -encoding UTF-8 -d out (Get-ChildItem -Recurse -Filter *.java src\main\java | ForEach-Object { $_.FullName })
-java -cp out ar.edu.utn.diplomatura.cuentasusuarios.CuentasUsuariosApplication
+# Compilar
+.\mvnw.cmd clean compile
+
+# Ejecutar los tests
+.\mvnw.cmd test
+
+# Levantar la aplicación
+.\mvnw.cmd spring-boot:run
+
+# Generar el JAR ejecutable
+.\mvnw.cmd clean package
+
+# Ejecutar el JAR
+java -jar target/app-cuentas-usuarios-1.0.0.jar
 ```
 
 ---
@@ -107,9 +154,6 @@ Tenés que ver las 6 cuentas en formato JSON.
 | `POST` | `/usuarios` | Crea un usuario nuevo |
 | `PUT` | `/usuarios/{id}` | Actualiza el nombre, apellido y email del usuario |
 | `DELETE` | `/usuarios/{id}?modo=logico` | Elimina un usuario de forma lógica |
-| `GET` | `/http/sin-memoria` | Prueba de estado (stateless) |
-| `GET` | `/http/eco?mensaje=N` | Prueba de cabeceras (headers) |
-| `GET` | `/http/estados/{codigo}` | Devuelve el código HTTP solicitado |
 
 Cuando algo no se puede hacer (el id no existe, el DNI es inválido, los datos enviados no corresponden), 
 la respuesta llega con un código de error específico como **404 Not Found**, **400 Bad Request** o **409 Conflict**.

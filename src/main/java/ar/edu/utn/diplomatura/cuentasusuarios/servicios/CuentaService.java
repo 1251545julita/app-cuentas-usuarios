@@ -66,7 +66,7 @@ public class CuentaService {
         validarCamposSegunTipoCuenta(tipoCuenta, limiteDescubierto, porcentajeTasaInteresAnual);
 
         String numeroCuenta = String.format("%012d", ThreadLocalRandom.current().nextLong(1_000_000_000_000L));
-        BigDecimal saldoInicial = BigDecimal.valueOf(0.0);
+        BigDecimal saldoInicial = request.saldoInicial();
         String moneda = request.moneda() != null ? request.moneda() : TIPO_MONEDA_PESOS;
 
         Cuenta unaCuenta = switch (tipoCuenta) {

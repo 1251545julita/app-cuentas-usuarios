@@ -33,9 +33,15 @@ class ValidadorDeDniTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"20123456", "M8345679", "  20123456  ", "20.123.456", "36.547.88B"})
+    @ValueSource(strings = {"20123456", "  20123456  ", "20.123.456"})
     void variosFormatosDeDni(String unDni){
         assertTrue(validador.esValido(unDni),"Debería ser válido"+ unDni);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"M8345679", "36.547.88B"})
+    void formatosNoValidosDeDni(String unDni){
+        assertFalse(validador.esValido(unDni),"Debería ser no válido"+ unDni);
     }
 
 }

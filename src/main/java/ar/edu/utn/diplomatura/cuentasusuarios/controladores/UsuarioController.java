@@ -97,8 +97,13 @@ public class UsuarioController {
     @ApiResponse(responseCode = "200", description = "Cuenta actualizada.")
     @ApiResponse(responseCode = "404", description = "Cuenta indicada no encontrada.")
     @PutMapping("/{id}")
-    public Usuario actualizar(@PathVariable Long id, @RequestBody Usuario datosNuevos) {
-        return usuarioService.actualizar(id, datosNuevos);
+    public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody Usuario datosNuevos) {
+        try{
+        return ResponseEntity.ok(usuarioService.actualizar(id, datosNuevos));
+        } catch (UsuarioNoEncontradoException e){
+            System.out.println("Get/usuarios/"+ id + " " + e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /** DELETE /usuarios/6
@@ -112,7 +117,11 @@ public class UsuarioController {
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado o ya se borró.")
     @ApiResponse(responseCode = "400", description = "El modo debe ser 'logico' o 'fisico' en los parametros.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id, @RequestParam(defaultValue = "logico")String modo) {
+    public ResponseEntity<Void> eliminar(@PathVariable Long id, @RequestParam(defaultValue = "logico") String modo) {
+
+//        usuarioService.eliminarUsuario(id, modo);
+//
+//        return ResponseEntity.noContent().build();
 
         if (!modo.equals("fisico") && !modo.equals("logico")){
             return ResponseEntity.badRequest().build(); // 400
