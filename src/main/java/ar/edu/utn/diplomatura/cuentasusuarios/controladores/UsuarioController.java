@@ -1,10 +1,6 @@
 package ar.edu.utn.diplomatura.cuentasusuarios.controladores;
 
 import ar.edu.utn.diplomatura.cuentasusuarios.entidades.Usuario;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.CamposInvalidosException;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.DniInvalidoException;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.EmailDuplicadoException;
-import ar.edu.utn.diplomatura.cuentasusuarios.excepciones.UsuarioNoEncontradoException;
 import ar.edu.utn.diplomatura.cuentasusuarios.servicios.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -57,12 +53,12 @@ public class UsuarioController {
     @ApiResponse(responseCode = "404", description = "El usuario no encontrado.")
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id) {
-        try {
+//        try {
             return ResponseEntity.ok(usuarioService.obtenerOFallar(id)); //200
-        } catch (UsuarioNoEncontradoException e){
-            System.out.println("Get/usuarios/"+ id + " " + e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
+//        } catch (UsuarioNoEncontradoException e){
+//            System.out.println("Get/usuarios/"+ id + " " + e.getMessage());
+//            return ResponseEntity.notFound().build();
+//        }
     }
 
 
@@ -78,14 +74,14 @@ public class UsuarioController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> crear(@RequestBody Usuario unUsuario) {
-        try {
+//        try {
             Usuario usuarioCreado = usuarioService.crear(unUsuario);
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCreado);
-        } catch (DniInvalidoException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        } catch (EmailDuplicadoException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
-        }
+//        } catch (DniInvalidoException e) {
+//            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+//        } catch (EmailDuplicadoException e) {
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+//        }
     }
 
     /** PUT /usuarios/1
@@ -98,12 +94,12 @@ public class UsuarioController {
     @ApiResponse(responseCode = "404", description = "Cuenta indicada no encontrada.")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody Usuario datosNuevos) {
-        try{
+//        try{
         return ResponseEntity.ok(usuarioService.actualizar(id, datosNuevos));
-        } catch (UsuarioNoEncontradoException e){
-            System.out.println("Get/usuarios/"+ id + " " + e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
+//        } catch (UsuarioNoEncontradoException e){
+//            System.out.println("Get/usuarios/"+ id + " " + e.getMessage());
+//            return ResponseEntity.notFound().build();
+//        }
     }
 
     /** DELETE /usuarios/6
@@ -119,19 +115,19 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id, @RequestParam(defaultValue = "logico") String modo) {
 
-//        usuarioService.eliminarUsuario(id, modo);
+        usuarioService.eliminarUsuario(id, modo);
+
+        return ResponseEntity.noContent().build();
+
+//        if (!modo.equals("fisico") && !modo.equals("logico")){
+//            return ResponseEntity.badRequest().build(); // 400
+//        }
 //
-//        return ResponseEntity.noContent().build();
-
-        if (!modo.equals("fisico") && !modo.equals("logico")){
-            return ResponseEntity.badRequest().build(); // 400
-        }
-
-        boolean seDioDeBaja = modo.equals("logico") ? usuarioService.desactivar(id) : usuarioService.eliminar(id);
-
-        if (!seDioDeBaja){
-            return ResponseEntity.notFound().build(); // 404
-        }
-        return ResponseEntity.noContent().build(); // 204
+//        boolean seDioDeBaja = modo.equals("logico") ? usuarioService.desactivar(id) : usuarioService.eliminar(id);
+//
+//        if (!seDioDeBaja){
+//            return ResponseEntity.notFound().build(); // 404
+//        }
+//        return ResponseEntity.noContent().build(); // 204
     }
 }

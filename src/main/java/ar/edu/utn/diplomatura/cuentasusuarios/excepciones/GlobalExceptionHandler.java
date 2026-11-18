@@ -16,29 +16,33 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsuarioNoEncontradoException.class)
-    public ResponseEntity<String> manejarUsuarioNoEncontrado( UsuarioNoEncontradoException ex, HttpServletRequest request) {
+    public ResponseEntity<Map<String, String>> manejarUsuarioNoEncontrado( UsuarioNoEncontradoException ex, HttpServletRequest request) {
 
         log.warn("{} {}", request.getMethod() + request.getRequestURI(), ex.getMessage());
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(ex.getMessage());
+                .body(Map.of("error", ex.getMessage()));
     }
 
     @ExceptionHandler(CuentaNoEncontradaException.class)
-    public ResponseEntity<String> manejarCuentaNoEncontrada( CuentaNoEncontradaException ex) {
+    public ResponseEntity<Map<String, String>> manejarCuentaNoEncontrada( CuentaNoEncontradaException ex, HttpServletRequest request) {
+
+        log.warn("{} {}", request.getMethod() + request.getRequestURI(), ex.getMessage());
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(ex.getMessage());
+                .body(Map.of("error",ex.getMessage()));
     }
 
     @ExceptionHandler(CamposInvalidosException.class)
-    public ResponseEntity<String> manejarCamposInvalidos( CamposInvalidosException ex) {
+    public ResponseEntity<Map<String, String>> manejarCamposInvalidos( CamposInvalidosException ex, HttpServletRequest request) {
+
+        log.warn("{} - {}", request.getMethod() + request.getRequestURI(), ex.getMessage());
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ex.getMessage());
+                .body(Map.of("error", ex.getMessage()));
     }
 
     @ExceptionHandler(DniInvalidoException.class)
@@ -84,4 +88,15 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler(TipoCuentaInvalidosException.class)
+    public ResponseEntity<Map<String, String>> manejarTipoCuentaInvalido( TipoCuentaInvalidosException ex, HttpServletRequest request) {
+
+        log.warn("{} - {}", request.getMethod() + request.getRequestURI(), ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", ex.getMessage()));
+    }
+
 }

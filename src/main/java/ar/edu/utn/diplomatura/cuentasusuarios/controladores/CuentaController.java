@@ -73,12 +73,12 @@ public class CuentaController {
     @ApiResponse(responseCode = "404", description = "La cuenta no existe")
     @GetMapping("/{id}")
     public ResponseEntity<Cuenta> buscarPorId(@PathVariable Long id) {
-        try {
+//        try {
             return ResponseEntity.ok(cuentaService.obtenerOFallar(id)); //200
-        } catch (CuentaNoEncontradaException e){
-            System.out.println("Get/cuentas/"+ id + " " + e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
+//        } catch (CuentaNoEncontradaException e){
+//            System.out.println("Get/cuentas/"+ id + " " + e.getMessage());
+//            return ResponseEntity.notFound().build();
+//        }
     }
 
     /**
@@ -94,19 +94,19 @@ public class CuentaController {
     @ApiResponse(responseCode = "404", description = "El usuario indicado no existe.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> crear(@Valid @RequestBody CuentaRequest request) {
-        try {
+    public ResponseEntity<CuentaResponse> crear(@Valid @RequestBody CuentaRequest request) {
+//        try {
             CuentaResponse creada = cuentaService.crear(request);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}").buildAndExpand(creada.id()).toUri();
             return ResponseEntity.created(location).body(creada);
-        } catch (TipoCuentaInvalidosException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        } catch (UsuarioNoEncontradoException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        } catch (CamposInvalidosException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+//        } catch (TipoCuentaInvalidosException e) {
+//            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+//        } catch (UsuarioNoEncontradoException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+//        } catch (CamposInvalidosException e) {
+//            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+//        }
     }
 
     /** PUT /cuentas/1
@@ -121,13 +121,13 @@ public class CuentaController {
     @ApiResponse(responseCode = "400", description = "Campos que no corresponden al tipo de cuenta indicado.")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@PathVariable Long id, @Valid @RequestBody CuentaUpdateRequest datosNuevos) {
-        try {
+//        try {
                 return ResponseEntity.ok(cuentaService.actualizar(id, datosNuevos));
-        } catch (CuentaNoEncontradaException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        } catch (CamposInvalidosException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+//        } catch (CuentaNoEncontradaException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+//        } catch (CamposInvalidosException e) {
+//            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+//        }
     }
 
     /** DELETE /cuentas/12
